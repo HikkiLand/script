@@ -3,6 +3,7 @@
 # Конфігурація
 SFTP_USER="sftp_user"
 STAT_SERVER="135.181.46.90" # IP сервера STAT
+SSH_PORT="42222" 
 SSH_KEY_PATH="$HOME/.ssh/id_rsa_sftp_stat"
 AUTHORIZED_KEYS_PATH="$HOME/.ssh/authorized_keys"
 
@@ -69,7 +70,7 @@ fi
 # Створення приватного ключа
 if [[ ! -f "$SSH_KEY_PATH" ]]; then
     echo "Створюємо приватний ключ для SFTP"
-    echo "$PRIVATE_KEY" > "$SSH_KEY_PATH"
+    echo "$PRIVATE_KEY" | sed '/^$/d' > "$SSH_KEY_PATH"
     chmod 600 "$SSH_KEY_PATH"
 else
     echo "Приватний ключ вже існує: $SSH_KEY_PATH"
@@ -84,8 +85,8 @@ else
 fi
 
 # Тестування підключення
-echo "Тестуємо підключення до сервера STAT"
-sftp -i "$SSH_KEY_PATH" "$SFTP_USER@$STAT_SERVER" << EOF
+echo "Тестуємо підключення до сервера STAT на порту $SSH_PORT"
+sftp -oPort=$SSH_PORT -i "$SSH_KEY_PATH" "$SFTP_USER@$STAT_SERVER" << EOF
 quit
 EOF
 
