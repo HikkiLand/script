@@ -36,6 +36,11 @@ if [[ ! -f "$LOG_FILE" ]]; then
     touch "$LOG_FILE"
 fi
 
+# Генеруємо випадкову затримку від 1 до 1800 секунд
+RANDOM_SLEEP=$(( RANDOM % 1800 + 1 ))
+log_message "Очікування $RANDOM_SLEEP секунд перед відправкою файлу..."
+sleep $RANDOM_SLEEP
+
 # Відправка файлу на сервер STAT через SFTP
 log_message "Передаємо файл $RESULT_FILE на сервер STAT..."
 sftp -oPort=$SFTP_PORT -i "$SSH_KEY_PATH" "$SFTP_USER@$STAT_SERVER" << EOF
