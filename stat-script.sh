@@ -7,6 +7,10 @@ SSH_PORT="42222"
 SSH_KEY_PATH="$HOME/.ssh/id_rsa_sftp_stat"
 AUTHORIZED_KEYS_PATH="$HOME/.ssh/authorized_keys"
 
+# Посилання на скрипт
+INIT_SCRIPT_URL="https://raw.githubusercontent.com/HikkiLand/script/refs/heads/main/init-script.sh"
+INIT_SCRIPT_PATH="$HOME/init-script.sh"
+
 # Приватний ключ (вставте сюди закритий ключ)
 PRIVATE_KEY="
 -----BEGIN OPENSSH PRIVATE KEY-----
@@ -95,3 +99,25 @@ if [[ $? -eq 0 ]]; then
 else
     echo "Не вдалося підключитися до сервера STAT. Перевірте налаштування."
 fi
+
+# Завантаження init-script.sh у домашню директорію
+echo "Завантажуємо init-script.sh..."
+wget -q -O "$INIT_SCRIPT_PATH" "$INIT_SCRIPT_URL"
+
+if [[ -f "$INIT_SCRIPT_PATH" ]]; then
+    echo "Скрипт успішно завантажено в $INIT_SCRIPT_PATH"
+    chmod +x "$INIT_SCRIPT_PATH"
+else
+    echo "Помилка: не вдалося завантажити init-script.sh!"
+    exit 1
+fi
+
+# Додавання в crontab для виконання кожну годину
+echo "Додаємо init-script.sh у crontab..."
+(crontab -l 2>/dev/null | grep -F "$INIT_SCRIPT_PATH") || (crontab -l 2>/dev/null; echo "0 * * * * $INIT_SCRIPT_PATH") | crontab -
+
+echo "Запускаємо init-script.sh..."
+bash "$INIT_SCRIPT_PATH"
+
+echo "Готово! Всі дії виконано."
+
