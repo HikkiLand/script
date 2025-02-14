@@ -52,13 +52,13 @@ EOF
 )
 
 if echo "$SFTP_OUTPUT" | grep -q "Permission denied"; then
-    log_message "❌ Помилка: немає дозволу на запис у $SFTP_UPLOAD_DIR!"
+    log_message "Помилка: немає дозволу на запис у $SFTP_UPLOAD_DIR!"
 elif echo "$SFTP_OUTPUT" | grep -q "not found"; then
-    log_message "❌ Помилка: директорія $SFTP_UPLOAD_DIR не існує!"
+    log_message "Помилка: директорія $SFTP_UPLOAD_DIR не існує!"
 elif echo "$SFTP_OUTPUT" | grep -q "failed"; then
-    log_message "❌ Помилка: невідома проблема при завантаженні файлу!"
+    log_message "Помилка: невідома проблема при завантаженні файлу!"
 else
-    log_message "✅ Файл успішно переданий на сервер STAT."
+    log_message "Файл успішно переданий на сервер STAT."
 fi
 
 log_message "Скрипт завершив виконання."
